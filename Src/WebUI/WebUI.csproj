@@ -21,19 +21,20 @@
     <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0-rc1.19456.14">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />  
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />  
-    <PackageReference Include="NSwag.AspNetCore" Version="13.0.6" />
-    <PackageReference Include="NSwag.MSBuild" Version="13.0.6">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    <PackageReference Include="NSwag.AspNetCore" Version="13.1.2" />  
+    <PackageReference Include="NSwag.Core" Version="13.1.2" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.5.0" />
+    <PackageReference Include="NSwag.MSBuild" Version="13.1.2">
       <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FluentValidation.AspNetCore" Version="8.5.0-preview5" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,14 +50,11 @@
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
   
-  <!--
-  Enable when NSwag.MSBuild is upgraded to .NET Core 3.0
   <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
     <Copy SourceFiles="@(Reference)" DestinationFolder="$(OutDir)References" />
-    <Exec Command="$(NSwagExe_Core22) run /variables:Configuration=$(Configuration)" />
+    <Exec Command="$(NSwagExe_Core30) run /variables:Configuration=$(Configuration) /runtime:NetCore30" />
     <RemoveDir Directories="$(OutDir)References" />
   </Target>
-  -->
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->
@@ -79,8 +77,9 @@
       <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**" />
       <DistFiles Include="$(SpaRoot)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
       <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-        <RelativePath>%(DistFils.Identity)</RelativePath>
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       </ResolvedFileToPublish>
     </ItemGroup>
   </Target>

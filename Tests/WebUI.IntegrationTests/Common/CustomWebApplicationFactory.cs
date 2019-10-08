@@ -26,37 +26,34 @@ namespace Northwind.WebUI.IntegrationTests.Common
 
                     // Add a database context using an in-memory 
                     // database for testing.
-                    services.AddDbContext<INorthwindDbContext, NorthwindDbContext>(options =>
+                    services.AddDbContext<NorthwindDbContext>(options =>
                     {
                         options.UseInMemoryDatabase("InMemoryDbForTesting");
                         options.UseInternalServiceProvider(serviceProvider);
                     });
 
+                    services.AddScoped<INorthwindDbContext>(provider => provider.GetService<NorthwindDbContext>());
+
                     var sp = services.BuildServiceProvider();
 
                     // Create a scope to obtain a reference to the database
-                    // context (NorthwindDbContext)
-                    using (var scope = sp.CreateScope())
+                    using var scope = sp.CreateScope();
+                    var scopedServices = scope.ServiceProvider;
+                    var context = scopedServices.GetRequiredService<NorthwindDbContext>();
+                    var logger = scopedServices.GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
+
+                    // Ensure the database is created.
+                    context.Database.EnsureCreated();
+
+                    try
                     {
-                        var scopedServices = scope.ServiceProvider;
-                        var context = scopedServices.GetRequiredService<INorthwindDbContext>();
-                        var logger = scopedServices.GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
-
-                        var concreteContext = (NorthwindDbContext)context;
-
-                        // Ensure the database is created.
-                        concreteContext.Database.EnsureCreated();
-
-                        try
-                        {
-                            // Seed the database with test data.
-                            Utilities.InitializeDbForTests(concreteContext);
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.LogError(ex, $"An error occurred seeding the " +
-                                                "database with test messages. Error: {ex.Message}");
-                        }
+                        // Seed the database with test data.
+                        Utilities.InitializeDbForTests(context);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "An error occurred seeding the " +
+                                            $"database with test messages. Error: {ex.Message}");
                     }
                 })
                 .UseEnvironment("Test");

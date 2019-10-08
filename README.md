@@ -1,8 +1,10 @@
+[![Build Status](https://codingflow.visualstudio.com/NorthwindTraders/_apis/build/status/NorthwindTraders%20-%20CI?branchName=master)](https://codingflow.visualstudio.com/NorthwindTraders/_build/latest?definitionId=22&branchName=master)
+
 # NorthwindTraders
 
 Northwind Traders is a sample application built using ASP.NET Core and Entity Framework Core. The architecture and design of the project is explained in the video:
 
-* [Clean Architecture with ASP.NET Core 2.1](https://youtu.be/_lwCVE_XgqI) ([slide deck](https://github.com/JasonGT/NorthwindTraders/raw/master/Slides.pdf))
+* [Clean Architecture with ASP.NET Core 2.1](https://youtu.be/_lwCVE_XgqI) ([slide deck](/Docs/Slides.pdf))
 
 The initial construction of this project is explained in the following blog posts:
 
@@ -46,22 +48,15 @@ Follow these steps to get your development environment set up:
   
   6. Launch [https://localhost:44376/api](http://localhost:44376/api) in your browser to view the API
 
-
-If you need to regenerate the Northwind Traders TypeScript client (`Northwind.WebUI\ClientApp\src\app\northwind-traders-api.ts`) follow these steps:
-
-  1. First, launch the application as per the above instructions
-  2. Next, from the `Northwind.WebUI\ClientApp` directory, run:
-     ```
-	 nswag run
-	 ```
-
-This was previously managed by an MSBuild task, however NSwag.MSBuild has not yet been updated to support .NET Core 3. The MSBuild task will be re-enabled when this happens.
-
 ## Technologies
 * .NET Core 3
 * ASP.NET Core 3
 * Entity Framework Core 3
 * Angular 8
+
+## Versions
+The [master](https://github.com/JasonGT/NorthwindTraders/tree/master) branch is running .NET Core 3. 
+The [dotnetcore22](https://github.com/JasonGT/NorthwindTraders/tree/dotnetcore22) branch contains an earlier version built with .NET Core 2.2. This is the version closely related to the talks on Clean Architecture with ASP.NET Core 2.1 / 2.2.
 
 ## License
 
